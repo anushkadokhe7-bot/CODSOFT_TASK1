@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details | CareerConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="job-details.js" defer></script>
+</head>
+<body>
+    <header class="navbar">
+        <h2>CareerConnect</h2>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#jobs">Find Jobs</a>
+        </nav>
+    </header>
+
+    <main class="details-container">
+        <a href="index.html#jobs">← Back to job listings</a>
+
+        <section id="job-details" class="job-details">
+            <h1 id="job-title">Loading job...</h1>
+            <p id="job-company"></p>
+            <p id="job-location"></p>
+            <p id="job-type"></p>
+
+            <h2>Job Description</h2>
+            <p id="job-description"></p>
+
+            <h2>Apply for this job</h2>
+            <form id="application-form" class="application-form">
+                <label for="candidate-name">Full name</label>
+                <input id="candidate-name" name="name" type="text"
+                       required maxlength="100">
+
+                <label for="candidate-email">Email address</label>
+                <input id="candidate-email" name="email" type="email"
+                       required>
+
+                <label for="candidate-resume">Resume (PDF, DOC or DOCX)</label>
+                <input id="candidate-resume" name="resume" type="file"
+                       accept=".pdf,.doc,.docx" required>
+
+                <button type="submit">Submit Application</button>
+                <p id="application-message" role="status"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CareerConnect | CodSoft Project</p>
+    </footer>
+</body>
+</html>

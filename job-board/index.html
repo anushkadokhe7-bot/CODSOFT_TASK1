@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerConnect - Job Portal & Recruitment Platform</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js CDN for interactive graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo" onclick="navigateTo('home')">
+        <span class="logo-icon">💼</span> Career<span class="logo-highlight">Connect</span>
+      </a>
+
+      <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle Menu">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#" class="nav-link active" onclick="navigateTo('home')">Home</a>
+        <a href="#" class="nav-link" onclick="navigateTo('jobs')">Browse Jobs</a>
+        <div id="dynamicNavArea" class="auth-nav-container">
+          <!-- Rendered dynamically by script.js -->
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container (SPA Views) -->
+  <main class="main-container">
+
+    <!-- VIEW 1: HOME / LANDING -->
+    <section id="view-home" class="app-view">
+      <div class="hero-section">
+        <div class="hero-container">
+          <h1 class="hero-title">Connect with Your Next <span class="highlight">Career Opportunity</span></h1>
+          <p class="hero-subtitle">Discover verified jobs from leading employers, or post new opportunities to hire top professional talent.</p>
+          
+          <div class="search-box">
+            <div class="search-input-group">
+              <span>🔍</span>
+              <input type="text" id="homeSearchInput" placeholder="Job title, keyword, or company...">
+            </div>
+            <div class="filter-input-group">
+              <select id="homeTypeFilter">
+                <option value="All">All Job Types</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Remote">Remote</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="handleHomeSearch()">Search</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform Summary Metrics -->
+      <div class="metrics-section container">
+        <div class="grid-4">
+          <div class="metric-card">
+            <div class="metric-icon">💼</div>
+            <div class="metric-data"><h3 id="statTotalJobs">0</h3><p>Active Jobs</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">📄</div>
+            <div class="metric-data"><h3 id="statTotalApplications">0</h3><p>Applications</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">👥</div>
+            <div class="metric-data"><h3 id="statTotalUsers">0</h3><p>Members</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon">📊</div>
+            <div class="metric-data"><h3 id="statPageVisits">0</h3><p>Page Visits</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Latest Jobs Preview -->
+      <div class="container section-padding">
+        <div class="section-header">
+          <h2>Featured Job Listings</h2>
+          <p>Explore recent career opportunities</p>
+        </div>
+        <div id="homeJobListings" class="jobs-grid"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: BROWSE ALL JOBS -->
+    <section id="view-jobs" class="app-view hidden">
+      <div class="container" style="padding: 40px 0;">
+        <div class="section-header">
+          <h2>All Job Listings</h2>
+          <p>Browse and search all available career opportunities</p>
+        </div>
+        <div class="search-box mb-30" style="max-width: 800px; margin: 0 auto 30px auto;">
+          <div class="search-input-group">
+            <span>🔍</span>
+            <input type="text" id="browseSearchInput" placeholder="Search by title, company, or keyword..." onkeyup="filterBrowseJobs()">
+          </div>
+        </div>
+        <div id="browseJobListings" class="jobs-grid"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: AUTHENTICATION (Login / Signup) -->
+    <section id="view-auth" class="app-view hidden">
+      <div class="auth-wrapper">
+        <div class="auth-card">
+          <div class="auth-tabs">
+            <button id="tabLoginBtn" class="auth-tab active" onclick="switchAuthMode('login')">Login</button>
+            <button id="tabSignupBtn" class="auth-tab" onclick="switchAuthMode('signup')">Sign Up</button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="loginForm" class="auth-form" onsubmit="processLogin(event)">
+            <h2>Welcome Back</h2>
+            <p>Access your CareerConnect portal</p>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="loginEmail" required placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="loginPassword" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Log In</button>
+          </form>
+
+          <!-- Signup Form -->
+          <form id="signupForm" class="auth-form hidden" onsubmit="processSignup(event)">
+            <h2>Create Account</h2>
+            <p>Join CareerConnect today</p>
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="signupName" required placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="signupEmail" required placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" id="signupPassword" required placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Account Type</label>
+              <select id="signupRole" required>
+                <option value="Candidate">Candidate (Job Seeker)</option>
+                <option value="Employer">Employer (Recruiter)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register Account</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: CANDIDATE DASHBOARD -->
+    <section id="view-candidate" class="app-view hidden">
+      <div class="container dashboard-container">
+        <div class="dashboard-header">
+          <div>
+            <h2>Candidate Portal</h2>
+            <p id="candidateWelcomeMsg">Welcome back!</p>
+          </div>
+          <button class="btn btn-outline" onclick="navigateTo('jobs')">Browse All Jobs</button>
+        </div>
+
+        <div class="grid-4 mb-30">
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="candStatTotal">0</h3><p>Submitted</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="candStatPending">0</h3><p>Pending</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="candStatAccepted">0</h3><p>Accepted</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="candStatRejected">0</h3><p>Rejected</p></div>
+          </div>
+        </div>
+
+        <div class="grid-2 mb-30">
+          <div class="card p-20">
+            <h3>Application Statistics</h3>
+            <div class="chart-box"><canvas id="candidateChart"></canvas></div>
+          </div>
+          <div class="card p-20">
+            <h3>Quick Job Search</h3>
+            <div class="form-group mb-10">
+              <input type="text" id="candidateSearchInput" placeholder="Filter jobs by title or company..." onkeyup="renderCandidateJobBoard()">
+            </div>
+            <div id="candidateJobBoard" class="candidate-jobs-scroll"></div>
+          </div>
+        </div>
+
+        <div class="card p-20">
+          <h3>My Application Tracking</h3>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Job Title</th>
+                  <th>Company</th>
+                  <th>Applied Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="candidateApplicationsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 5: EMPLOYER DASHBOARD -->
+    <section id="view-employer" class="app-view hidden">
+      <div class="container dashboard-container">
+        <div class="dashboard-header">
+          <div>
+            <h2>Employer Dashboard</h2>
+            <p id="employerWelcomeMsg">Manage your listings and applicants</p>
+          </div>
+          <button class="btn btn-accent" onclick="openJobModal()">+ Post New Job</button>
+        </div>
+
+        <div class="grid-4 mb-30">
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="empStatJobs">0</h3><p>My Jobs</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="empStatApps">0</h3><p>Total Applicants</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="empStatPending">0</h3><p>Pending Review</p></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-data"><h3 id="empStatAccepted">0</h3><p>Accepted</p></div>
+          </div>
+        </div>
+
+        <div class="grid-2 mb-30">
+          <div class="card p-20">
+            <h3>Applicant Status Breakdown</h3>
+            <div class="chart-box"><canvas id="employerChart"></canvas></div>
+          </div>
+          <div class="card p-20">
+            <h3>Visitor Analytics Note</h3>
+            <p class="text-muted">Visitor counts are tracked locally via browser storage. Genuine global traffic analysis requires backend server integration.</p>
+            <div style="margin-top: 20px; font-size: 2rem; font-weight: bold; color: var(--primary-color);" id="empVisitorDisplay">0 Visits Recorded</div>
+          </div>
+        </div>
+
+        <!-- My Jobs List -->
+        <div class="card p-20 mb-30">
+          <h3>My Active Job Listings</h3>
+          <div id="employerJobsList" class="mt-15"></div>
+        </div>
+
+        <!-- Applicant Management -->
+        <div class="card p-20">
+          <h3>Applicants for Your Jobs</h3>
+          <div class="table-responsive mt-15">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Email</th>
+                  <th>Job Title</th>
+                  <th>Applied Date</th>
+                  <th>Resume</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="employerApplicantsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 6: JOB DETAILS & APPLICATION -->
+    <section id="view-job-details" class="app-view hidden">
+      <div class="container" style="max-width: 800px; padding: 40px 20px;">
+        <button class="btn btn-outline mb-20" onclick="navigateTo('jobs')">&larr; Back to Listings</button>
+        <div class="card p-30" id="jobDetailsContent"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Job Posting Modal Form -->
+  <div id="jobModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h3 id="jobModalTitle">Post New Job Listing</h3>
+      <form id="jobForm" onsubmit="saveJobListing(event)">
+        <input type="hidden" id="editJobId">
+        <div class="form-group">
+          <label>Job Title</label>
+          <input type="text" id="jobTitle" required placeholder="e.g. Senior Frontend Engineer">
+        </div>
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" id="jobCompany" required placeholder="e.g. TechCorp Inc.">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="jobLocation" required placeholder="e.g. Remote / New York">
+          </div>
+          <div class="form-group">
+            <label>Job Type</label>
+            <select id="jobType">
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Remote">Remote</option>
+              <option value="Contract">Contract</option>
+              <option value="Internship">Internship</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Salary Range</label>
+          <input type="text" id="jobSalary" required placeholder="e.g. $90,000 - $120,000">
+        </div>
+        <div class="form-group">
+          <label>Job Description</label>
+          <textarea id="jobDescription" rows="5" required placeholder="Describe responsibilities, requirements, and benefits..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeJobModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Job Listing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <h3>💼 CareerConnect</h3>
+        <p>Connecting ambition with opportunity. Simple, effective, and modern job portal solution.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#" onclick="navigateTo('home')">Home</a></li>
+          <li><a href="#" onclick="navigateTo('jobs')">Browse Jobs</a></li>
+          <li><a href="#" onclick="navigateTo('auth')">Login / Signup</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 CareerConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

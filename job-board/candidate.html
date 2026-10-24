@@ -1,0 +1,48 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Dashboard | CareerConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth-guard.js"></script>
+    <script>
+     if (!requireCareerConnectLogin("candidate")) {
+        document.documentElement.style.display = "none";
+     }
+    </script>
+    <script src="candidate.js" defer></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">CareerConnect</a>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="employer.html">For Employers</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <h1>Candidate Dashboard</h1>
+        <p>Welcome! Track your job applications below.</p>
+
+        <section class="dashboard-card">
+            <h2>My Applications</h2>
+            <p id="application-count">Loading applications...</p>
+
+            <div id="application-list"></div>
+        </section>
+
+        <p>
+            <a href="index.html">← Browse More Jobs</a>
+        </p>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CareerConnect. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

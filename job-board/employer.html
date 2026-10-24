@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard | CareerConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth-guard.js"></script>
+    <script>
+      if (!requireCareerConnectLogin("employer")) {
+        document.documentElement.style.display = "none";
+      }
+ </script>
+    <script src="employer.js" defer></script>
+</head>
+<body>
+    <header class="navbar">
+        <h2>CareerConnect</h2>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#jobs">Find Jobs</a>
+            <a href="employer.html">Employer Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <h1>Employer Dashboard</h1>
+        <p>Create a job listing and make it visible on CareerConnect.</p>
+
+        <section class="dashboard-card">
+            <h2>Post a New Job</h2>
+
+            <form id="job-form" class="job-form">
+                <label for="title">Job title</label>
+                <input id="title" name="title" type="text"
+                       placeholder="e.g. Web Developer Intern"
+                       required maxlength="100">
+
+                <label for="company">Company name</label>
+                <input id="company" name="company" type="text"
+                       placeholder="e.g. BrightTech"
+                       required maxlength="100">
+
+                <label for="location">Location</label>
+                <input id="location" name="location" type="text"
+                       placeholder="e.g. Pune or Remote"
+                       required maxlength="100">
+
+                <label for="type">Job type</label>
+                <select id="type" name="type" required>
+                    <option value="">Select job type</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Remote">Remote</option>
+                </select>
+
+                <label for="description">Job description</label>
+                <textarea id="description" name="description"
+                          rows="5" required maxlength="3000"
+                          placeholder="Describe the role and responsibilities"></textarea>
+
+                <button type="submit">Publish Job</button>
+                <p id="form-message" role="status"></p>
+            </form>
+        </section>
+
+        <section class="dashboard-card">
+            <h2>Jobs You Posted</h2>
+            <div id="posted-jobs"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CareerConnect | CodSoft Project</p>
+    </footer>
+</body>
+</html>
